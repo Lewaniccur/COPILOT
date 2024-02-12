@@ -1,23 +1,23 @@
 <xml xmlns="http://www.w3.org/1999/xhtml">
   <variables>
-    <variable type="Number" id="tradeAmount">0.35</variable>
-    <variable type="Number" id="tradeType">0</variable>
-    <variable type="Number" id="duration">5</variable>
-    <variable type="Number" id="durationUnit">t</variable>
-    <variable type="Number" id="barrierOffset">0</variable>
-    <variable type="Number" id="secondBarrierOffset">0</variable>
-    <variable type="Number" id="prediction">0</variable>
-    <variable type="Number" id="initialRuns">10</variable>
-    <variable type="Number" id="stopLoss">50</variable>
-    <variable type="Number" id="takeProfit">100</variable>
-    <variable type="Number" id="lostTrades">0</variable>
-    <variable type="Number" id="wonTrades">0</variable>
-    <variable type="Number" id="totalProfit">0</variable>
-    <variable type="Number" id="currentStreak">0</variable>
-    <variable type="Number" id="maxLossStreak">3</variable>
-    <variable type="Number" id="maxWinStreak">5</variable>
-    <variable type="Number" id="martingaleLevel">0</variable>
-    <variable type="Number" id="martingaleFactor">2</variable>
+    <variable type="0.35" id="tradeAmount">0.35</variable>
+    <variable type="0" id="tradeType">0</variable>
+    <variable type="5" id="duration">5</variable>
+    <variable type="t" id="durationUnit">t</variable>
+    <variable type="0" id="barrierOffset">0</variable>
+    <variable type="0" id="secondBarrierOffset">0</variable>
+    <variable type="0" id="prediction">0</variable>
+    <variable type="10" id="initialRuns">10</variable>
+    <variable type="50" id="stopLoss">50</variable>
+    <variable type="100" id="takeProfit">100</variable>
+    <variable type="0" id="lostTrades">0</variable>
+    <variable type="0" id="wonTrades">0</variable>
+    <variable type="0" id="totalProfit">0</variable>
+    <variable type="0" id="currentStreak">0</variable>
+    <variable type="3" id="maxLossStreak">3</variable>
+    <variable type="5" id="maxWinStreak">5</variable>
+    <variable type="0" id="martingaleLevel">0</variable>
+    <variable type="2" id="martingaleFactor">2</variable>
   </variables>
   <block type="trade_definition_tradeoptions" id="tradeOptions" x="13" y="13">
     <field name="MARKET_LIST">volidx</field>
