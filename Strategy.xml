@@ -1,0 +1,192 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <variables>
+    <variable type="Number" id="wins">0</variable>
+    <variable type="Number" id="losses">0</variable>
+  </variables>
+  <block type="trade" id="trade" x="13" y="63">
+    <field name="ACCOUNT_LIST">virtual</field>
+    <field name="MARKET_LIST">volidx</field>
+    <field name="SUBMARKET_LIST">random_index</field>
+    <field name="SYMBOL_LIST">R_100</field>
+    <field name="TRADETYPECAT_LIST">callput</field>
+    <field name="TRADETYPE_LIST">risefall</field>
+    <field name="CURRENCY_LIST">USD</field>
+    <value name="AMOUNT">
+      <shadow type="math_number" id="amount">
+        <field name="NUM">0.35</field>
+      </shadow>
+    </value>
+    <value name="DURATION">
+      <shadow type="math_number" id="duration">
+        <field name="NUM">5</field>
+      </shadow>
+    </value>
+    <field name="DURATIONTYPE_LIST">t</field>
+    <field name="BARRIEROFFSETTYPE_LIST">+</field>
+    <value name="BARRIEROFFSET">
+      <shadow type="math_number" id="barrieroffset">
+        <field name="NUM">0</field>
+      </shadow>
+    </value>
+    <field name="SECONDBARRIEROFFSETTYPE_LIST">+</field>
+    <value name="SECONDBARRIEROFFSET">
+      <shadow type="math_number" id="secondbarrieroffset">
+        <field name="NUM">0</field>
+      </shadow>
+    </value>
+    <statement name="SUBMARKET">
+      <block type="tick_analysis" id="tick_analysis">
+        <field name="TICKANALYSISTYPE_LIST">lastDigit</field>
+        <statement name="TICKANALYSIS_STACK">
+          <block type="controls_if" id="controls_if">
+            <mutation elseif="1" else="1"></mutation>
+            <value name="IF0">
+              <block type="logic_compare" id="logic_compare">
+                <field name="OP">EQ</field>
+                <value name="A">
+                  <block type="tick" id="tick">
+                    <field name="TICKPROP_LIST">lastDigit</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="math_number" id="math_number">
+                    <field name="NUM">0</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <statement name="DO0">
+              <block type="purchase" id="purchase">
+                <field name="PURCHASE_LIST">CALL</field>
+              </block>
+            </statement>
+            <value name="IF1">
+              <block type="logic_compare" id="logic_compare1">
+                <field name="OP">EQ</field>
+                <value name="A">
+                  <block type="tick" id="tick1">
+                    <field name="TICKPROP_LIST">lastDigit</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="math_number" id="math_number1">
+                    <field name="NUM">9</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <statement name="DO1">
+              <block type="purchase" id="purchase1">
+                <field name="PURCHASE_LIST">PUT</field>
+              </block>
+            </statement>
+            <statement name="ELSE">
+              <block type="trade_again" id="trade_again"></block>
+            </statement>
+          </block>
+        </statement>
+        <next>
+          <block type="before_purchase" id="before_purchase">
+            <statement name="BEFOREPURCHASE_STACK">
+              <block type="notify" id="notify">
+                <field name="NOTIFICATION_TYPE">info</field>
+                <value name="MESSAGE">
+                  <block type="text" id="text">
+                    <field name="TEXT">Purchased contract</field>
+                  </block>
+                </value>
+                <next>
+                  <block type="balance" id="balance">
+                    <field name="BALANCE_TYPE">string</field>
+                  </block>
+                </next>
+              </block>
+            </statement>
+            <next>
+              <block type="after_purchase" id="after_purchase">
+                <statement name="AFTERPURCHASE_STACK">
+                  <block type="notify" id="notify1">
+                    <field name="NOTIFICATION_TYPE">info</field>
+                    <value name="MESSAGE">
+                      <block type="text_join" id="text_join">
+                        <mutation items="3"></mutation>
+                        <value name="ADD0">
+                          <block type="text" id="text1">
+                            <field name="TEXT">Contract result: </field>
+                          </block>
+                        </value>
+                        <value name="ADD1">
+                          <block type="contract_result" id="contract_result">
+                            <field name="CHECK_RESULT">win</field>
+                          </block>
+                        </value>
+                        <value name="ADD2">
+                          <block type="contract_result" id="contract_result1">
+                            <field name="CHECK_RESULT">profit</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <next>
+                      <block type="controls_if" id="controls_if1">
+                        <mutation elseif="1" else="1"></mutation>
+                        <value name="IF0">
+                          <block type="contract_result" id="contract_result2">
+                            <field name="CHECK_RESULT">win</field>
+                          </block>
+                        </value>
+                        <statement name="DO0">
+                          <block type="math_change" id="math_change">
+                            <field name="VAR" id="wins">wins</field>
+                            <value name="DELTA">
+                              <shadow type="math_number" id="math_number2">
+                                <field name="NUM">1</field>
+                              </shadow>
+                            </value>
+                          </block>
+                        </statement>
+                        <value name="IF1">
+                          <block type="contract_result" id="contract_result3">
+                            <field name="CHECK_RESULT">loss</field>
+                          </block>
+                        </value>
+                        <statement name="DO1">
+                          <block type="math_change" id="math_change1">
+                            <field name="VAR" id="losses">losses</field>
+                            <value name="DELTA">
+                              <shadow type="math_number" id="math_number3">
+                                <field name="NUM">1</field>
+                              </shadow>
+                            </value>
+                          </block>
+                        </statement>
+                        <statement name="ELSE">
+                          <block type="notify" id="notify2">
+                            <field name="NOTIFICATION_TYPE">warn</field>
+                            <value name="MESSAGE">
+                              <block type="text" id="text2">
+                                <field name="TEXT">Unknown contract result</field>
+                              </block>
+                            </value>
+                          </block>
+                        </statement>
+                        <next>
+                          <block type="controls_if" id="controls_if2">
+                            <mutation elseif="1" else="1"></mutation>
+                            <value name="IF0">
+                              <block type="logic_compare" id="logic_compare2">
+                                <field name="OP">LT</field>
+                                <value name="A">
+                                  <block type="variables_get" id="variables_get">
+                                    <field name="VAR" id="wins">wins</field>
+                                  </block>
+                                </value>
+                                <value name="B">
+                                  <block type="math_number" id="math_number4">
+                                    <field name="NUM">10</field>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                            <statement name="DO0">
+                              <block type="controls_if"
