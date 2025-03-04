@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<binarybot>
+    <trade>
+        <market>Volatility Indices</market>
+        <symbol>R_10</symbol>
+        <contract_type>Digit Even</contract_type>
+        <duration>1</duration>
+        <duration_unit>tick</duration_unit>
+        <stake>1</stake>
+        <currency>USD</currency>
+    </trade>
+    <strategy>
+        <condition>
+            <if>
+                <expression>
+                    <indicator>Price Movement</indicator>
+                    <comparison>is trending up</comparison>
+                </expression>
+                <then>
+                    <trade_type>Digit Odd</trade_type>
+                </then>
+                <else>
+                    <trade_type>Digit Even</trade_type>
+                </else>
+            </if>
+        </condition>
+        <martingale>
+            <factor>2</factor>
+        </martingale>
+        <stop_loss>10</stop_loss>
+        <take_profit>50</take_profit>
+    </strategy>
+</binarybot>
