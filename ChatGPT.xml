@@ -1,0 +1,163 @@
+# Create the XML file for the Deriv Binary Bot strategy
+
+xml_content = """<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+  <blockly>
+    <variables>
+      <variable type="" id="stake">stake</variable>
+      <variable type="" id="profit">profit</variable>
+      <variable type="" id="loss">loss</variable>
+      <variable type="" id="lastDigit">lastDigit</variable>
+      <variable type="" id="prediction">prediction</variable>
+    </variables>
+    <block type="trade_definition" id="trade" x="50" y="50">
+      <field name="trade_type">digits</field>
+      <field name="contract_type">even_odd</field>
+      <field name="duration_type">ticks</field>
+      <field name="duration">1</field>
+      <field name="stake_type">dollar</field>
+      <value name="stake">
+        <shadow type="math_number">
+          <field name="NUM">1</field>
+        </shadow>
+      </value>
+      <field name="currency">USD</field>
+      <value name="prediction">
+        <block type="variables_get">
+          <field name="VAR" id="prediction">prediction</field>
+        </block>
+      </value>
+    </block>
+
+    <!-- Strategy: Analyzing last digit -->
+    <block type="variables_set" id="analyze_digit" x="50" y="150">
+      <field name="VAR" id="lastDigit">lastDigit</field>
+      <value name="VALUE">
+        <block type="last_digit_list"></block>
+      </value>
+    </block>
+
+    <block type="controls_if" id="decide_prediction" x="50" y="250">
+      <value name="IF0">
+        <block type="logic_compare">
+          <field name="OP">EQ</field>
+          <value name="A">
+            <block type="math_modulo">
+              <value name="DIVIDEND">
+                <block type="variables_get">
+                  <field name="VAR" id="lastDigit">lastDigit</field>
+                </block>
+              </value>
+              <value name="DIVISOR">
+                <shadow type="math_number">
+                  <field name="NUM">2</field>
+                </shadow>
+              </value>
+            </block>
+          </value>
+          <value name="B">
+            <shadow type="math_number">
+              <field name="NUM">0</field>
+            </shadow>
+          </value>
+        </block>
+      </value>
+      <statement name="DO0">
+        <block type="variables_set">
+          <field name="VAR" id="prediction">prediction</field>
+          <value name="VALUE">
+            <block type="math_number">
+              <field name="NUM">0</field>
+            </block>
+          </value>
+        </block>
+      </statement>
+      <statement name="ELSE">
+        <block type="variables_set">
+          <field name="VAR" id="prediction">prediction</field>
+          <value name="VALUE">
+            <block type="math_number">
+              <field name="NUM">1</field>
+            </block>
+          </value>
+        </block>
+      </statement>
+    </block>
+
+    <!-- Martingale Strategy -->
+    <block type="controls_if" id="martingale" x="50" y="350">
+      <value name="IF0">
+        <block type="logic_operation">
+          <field name="OP">OR</field>
+          <value name="A">
+            <block type="contract_result">
+              <field name="RESULT">loss</field>
+            </block>
+          </value>
+        </block>
+      </value>
+      <statement name="DO0">
+        <block type="variables_set">
+          <field name="VAR" id="stake">stake</field>
+          <value name="VALUE">
+            <block type="math_arithmetic">
+              <field name="OP">MULTIPLY</field>
+              <value name="A">
+                <block type="variables_get">
+                  <field name="VAR" id="stake">stake</field>
+                </block>
+              </value>
+              <value name="B">
+                <shadow type="math_number">
+                  <field name="NUM">2</field>
+                </shadow>
+              </value>
+            </block>
+          </value>
+        </block>
+      </statement>
+    </block>
+
+    <!-- Stop Loss & Take Profit -->
+    <block type="controls_if" id="stop_loss_take_profit" x="50" y="450">
+      <value name="IF0">
+        <block type="logic_operation">
+          <field name="OP">OR</field>
+          <value name="A">
+            <block type="logic_compare">
+              <field name="OP">GTE</field>
+              <value name="A">
+                <block type="variables_get">
+                  <field name="VAR" id="profit">profit</field>
+                </block>
+              </value>
+              <value name="B">
+                <shadow type="math_number">
+                  <field name="NUM">50</field>
+                </shadow>
+              </value>
+            </block>
+          </value>
+          <value name="B">
+            <block type="logic_compare">
+              <field name="OP">GTE</field>
+              <value name="A">
+                <block type="variables_get">
+                  <field name="VAR" id="loss">loss</field>
+                </block>
+              </value>
+              <value name="B">
+                <shadow type="math_number">
+                  <field name="NUM">10</field>
+                </shadow>
+              </value>
+            </block>
+          </value>
+        </block>
+      </value>
+      <statement name="DO0">
+        <block type="trade_close"></block>
+      </statement>
+    </block>
+  </blockly>
+</xml>
