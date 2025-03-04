@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bot>
+  <!-- Bot metadata -->
+  <name>Last Digit Odd/Even Predictor</name>
+  <description>A bot to predict if the last digit is odd or even</description>
+  
+  <!-- Define variables -->
+  <variables>
+    <variable name="stake" type="number" value="1" />
+    <variable name="duration" type="number" value="1" />
+    <variable name="duration_unit" type="string" value="t" /> <!-- t for ticks -->
+    <variable name="last_digit" type="number" value="0" />
+  </variables>
+  
+  <!-- Main trading logic -->
+  <block type="trade">
+    <field name="SYMBOL">R_100</field> <!-- Volatility 100 Index, change as needed -->
+    <field name="TRADETYPE">DIGITEVENODD</field> <!-- Trade type for digit prediction -->
+    <field name="DURATION" variable="duration" />
+    <field name="DURATIONTYPE" variable="duration_unit" />
+    <field name="STAKE" variable="stake" />
+    
+    <!-- Logic to determine odd or even -->
+    <block type="before_purchase">
+      <block type="tick">
+        <statement name="TICK">
+          <!-- Extract last digit -->
+          <block type="last_digit">
+            <field name="OUTPUT" variable="last_digit" />
+          </block>
+          
+          <!-- Check if last digit is odd or even -->
+          <block type="logic_condition">
+            <field name="CONDITION">EQUALS</field>
+            <value name="A">
+              <block type="math_modulo">
+                <value name="DIVIDEND">
+                  <block type="variables_get">
+                    <field name="VAR" variable="last_digit" />
+                  </block>
+                </value>
+                <value name="DIVISOR">
+                  <block type="math_number">
+                    <field name="NUM">2</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="B">
+              <block type="math_number">
+                <field name="NUM">0</field>
+              </block>
+            </value>
+            <statement name="DO">
+              <!-- If even -->
+              <block type="purchase">
+                <field name="PURCHASE">DIGITEVEN</field>
+              </block>
+            </statement>
+            <statement name="ELSE">
+              <!-- If odd -->
+              <block type="purchase">
+                <field name="PURCHASE">DIGITODD</field>
+              </block>
+            </statement>
+          </block>
+        </statement>
+      </block>
+    </block>
+    
+    <!-- After purchase logic -->
+    <block type="after_purchase">
+      <block type="trade_again" />
+    </block>
+  </block>
+</bot>
