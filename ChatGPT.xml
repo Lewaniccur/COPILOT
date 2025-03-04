@@ -1,5 +1,3 @@
-# Create the XML file for the Deriv Binary Bot strategy
-
 xml_content = """<?xml version="1.0" encoding="UTF-8"?>
 <xml>
   <blockly>
